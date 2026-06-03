@@ -15,7 +15,6 @@ class PreviewLiteracy extends Component
     {
         $id = (int) request()->route('id');
 
-        // === AMBIL DATA DARI TABEL literacy (bukan case_report) ===
         $row = DB::table('literacy')
             ->select([
                 'id',
@@ -26,6 +25,8 @@ class PreviewLiteracy extends Component
                 'content_id',
                 'content_en',
                 'image',
+                'image_id',
+                'image_en',
                 'tanggal_publikasi',
                 'publikasi',
                 'status',
@@ -34,9 +35,10 @@ class PreviewLiteracy extends Component
             ->where('id', $id)
             ->first();
 
-        if (!$row) abort(404);
+        if (!$row) {
+            abort(404);
+        }
 
-        // === HANDLE LOCALE ===
         $locale = app()->getLocale();
 
         $title = $locale === 'id'
@@ -51,13 +53,16 @@ class PreviewLiteracy extends Component
             ? ($row->content_id ?: $row->content_en)
             : ($row->content_en ?: $row->content_id);
 
-        // === SET ITEM UNTUK DITAMPILKAN ===
+        $imgPath = $locale === 'id'
+            ? ($row->image_id ?: $row->image)
+            : ($row->image_en ?: $row->image);
+
         $this->item = [
             'id'                => $row->id,
             'title'             => $title,
             'description'       => $description,
             'content'           => $content,
-            'image_url'         => $row->image ? Storage::url($row->image) : null,
+            'image_url'         => $imgPath ? Storage::url($imgPath) : null,
             'tanggal_publikasi' => $row->tanggal_publikasi,
             'tahun'             => $row->tanggal_publikasi
                 ? Carbon::parse($row->tanggal_publikasi)->format('Y')

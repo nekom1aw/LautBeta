@@ -311,7 +311,7 @@
                 <div>
                     <label class="block text-sm font-medium mb-1">Publikasi</label>
                     <select wire:model.defer="publikasi" class="w-full border p-2">
-                        <option value="draf">Draf</option>
+                        <option value="draft">Draft</option>
                         <option value="publish">Publish</option>
                     </select>
                     @error('publikasi')
@@ -332,23 +332,44 @@
             </div>
 
             {{-- GAMBAR --}}
-            <div>
-                <label class="block text-sm font-medium mb-1">Gambar</label>
-                <input type="file" accept="image/*" wire:model="image" class="w-full border p-2">
-                <div wire:loading wire:target="image" class="text-sm text-slate-500 mt-1">Uploading…</div>
-                @error('image')
-                <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
-                @enderror
+            <div class="grid sm:grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-sm font-medium mb-1">Gambar ID</label>
+                    <input type="file" accept="image/*" wire:model="image_id" class="w-full border p-2">
+                    <div wire:loading wire:target="image_id" class="text-sm text-slate-500 mt-1">Uploading…</div>
+                    @error('image_id')
+                    <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                    @enderror
 
-                @if ($image && method_exists($image,'temporaryUrl'))
-                <div class="mt-3">
-                    <img src="{{ $image->temporaryUrl() }}" alt="Preview" class="max-h-52 border">
+                    @if ($image_id && method_exists($image_id,'temporaryUrl'))
+                    <div class="mt-3">
+                        <img src="{{ $image_id->temporaryUrl() }}" alt="Preview ID" class="max-h-52 border">
+                    </div>
+                    @elseif ($imagePreviewId)
+                    <div class="mt-3">
+                        <img src="{{ $imagePreviewId }}" alt="Preview ID" class="max-h-52 border">
+                    </div>
+                    @endif
                 </div>
-                @elseif ($imagePreview)
-                <div class="mt-3">
-                    <img src="{{ $imagePreview }}" alt="Preview" class="max-h-52 border">
+
+                <div>
+                    <label class="block text-sm font-medium mb-1">Gambar EN</label>
+                    <input type="file" accept="image/*" wire:model="image_en" class="w-full border p-2">
+                    <div wire:loading wire:target="image_en" class="text-sm text-slate-500 mt-1">Uploading…</div>
+                    @error('image_en')
+                    <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                    @enderror
+
+                    @if ($image_en && method_exists($image_en,'temporaryUrl'))
+                    <div class="mt-3">
+                        <img src="{{ $image_en->temporaryUrl() }}" alt="Preview EN" class="max-h-52 border">
+                    </div>
+                    @elseif ($imagePreviewEn)
+                    <div class="mt-3">
+                        <img src="{{ $imagePreviewEn }}" alt="Preview EN" class="max-h-52 border">
+                    </div>
+                    @endif
                 </div>
-                @endif
             </div>
 
 

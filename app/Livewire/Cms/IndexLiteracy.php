@@ -25,7 +25,6 @@ class IndexLiteracy extends Component
         'perPage'   => ['except' => 6],
     ];
 
-
     public function updated($field)
     {
         if (in_array($field, ['type', 'publikasi', 'q', 'sort', 'perPage'])) {
@@ -39,6 +38,7 @@ class IndexLiteracy extends Component
         return [
             'title'       => $locale === 'id' ? 'title_id' : 'title_en',
             'description' => $locale === 'id' ? 'description_id' : 'description_en',
+            'image'       => $locale === 'id' ? 'image_id' : 'image_en',
         ];
     }
 
@@ -50,12 +50,12 @@ class IndexLiteracy extends Component
             ->select(
                 'id',
                 'slug',
-                'image',
                 'type',
                 'tanggal_publikasi',
                 'publikasi',
                 DB::raw("{$cols['title']} as title"),
-                DB::raw("{$cols['description']} as description")
+                DB::raw("{$cols['description']} as description"),
+                DB::raw("COALESCE({$cols['image']}, image) as image")
             )
             ->where('status', 'on')
             ->when($this->type !== 'all', fn($q) => $q->where('type', $this->type))
@@ -94,9 +94,7 @@ class IndexLiteracy extends Component
     {
         $query = $this->baseQuery();
 
-
         $this->total = $query->count();
-
 
         $query = match ($this->sort) {
             'oldest' => $query->orderBy('updated_at')->orderBy('id'),
@@ -104,7 +102,6 @@ class IndexLiteracy extends Component
             'za'     => $query->orderBy('title', 'desc'),
             default  => $query->orderByDesc('updated_at')->orderByDesc('id'),
         };
-
 
         return $query
             ->skip(($this->page - 1) * $this->perPage)

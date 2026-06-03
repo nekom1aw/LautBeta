@@ -118,4 +118,16 @@ class PageController extends Controller
     {
         return view('news');
     }
+
+    public function detailLiteracyGrafik($locale, $id)
+    {
+        request()->route()->setParameter('type', 'grafik');
+        return view('page-literacy-detail', compact('id'));
+    }
+
+    public function detailLiteracyJournal($locale, $id)
+    {
+        request()->route()->setParameter('type', 'journal');
+        return view('page-literacy-detail', compact('id'));
+    }
 }

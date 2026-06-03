@@ -35,7 +35,7 @@
                     </p>
 
                     <div class="mt-2 flex gap-3">
-                        <a href="/cms/infografik/edit/{{ $item->id }}"
+                        <a href="{{ route('cms.page.edit.infografik', ['locale' => app()->getLocale(), 'id' => $item->id]) }}"
                             class="text-blue-600 hover:underline">
                             Edit
                         </a>

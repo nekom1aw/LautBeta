@@ -11,10 +11,17 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('agenda', function (Blueprint $table) {
-            $table->string('file_id')->nullable()->after('image');
-            $table->string('file_en')->nullable()->after('file_id');
-        });
+        if (!Schema::hasColumn('agenda', 'file_id')) {
+            Schema::table('agenda', function (Blueprint $table) {
+                $table->string('file_id')->nullable()->after('image');
+            });
+        }
+
+        if (!Schema::hasColumn('agenda', 'file_en')) {
+            Schema::table('agenda', function (Blueprint $table) {
+                $table->string('file_en')->nullable()->after('file_id');
+            });
+        }
     }
 
     /**
@@ -22,8 +29,16 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('agenda', function (Blueprint $table) {
-            $table->dropColumn(['file_id', 'file_en']);
-        });
+        if (Schema::hasColumn('agenda', 'file_en')) {
+            Schema::table('agenda', function (Blueprint $table) {
+                $table->dropColumn('file_en');
+            });
+        }
+
+        if (Schema::hasColumn('agenda', 'file_id')) {
+            Schema::table('agenda', function (Blueprint $table) {
+                $table->dropColumn('file_id');
+            });
+        }
     }
 };

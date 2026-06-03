@@ -67,6 +67,8 @@ Route::middleware([LanguageMiddleware::class])
         //ini literacy
         Route::get('/Pagegrafik', [PageController::class, 'grafik'])->name('grafik');
         Route::get('/Pagejournal', [PageController::class, 'journal'])->name('journal');
+        Route::get('/grafik/{id}/{slug?}', [PageController::class, 'detailLiteracyGrafik'])->name('grafik.detail');
+        Route::get('/journal/{id}/{slug?}', [PageController::class, 'detailLiteracyJournal'])->name('journal.detail');
 
 
 
@@ -138,7 +140,6 @@ Route::prefix('cms/{locale}')
 
         // infografik
         Route::get('/pageindexinfografik', [ControllerCms::class, 'indexinfografik'])->name('page.index.infografik');
-        // Route::get('/pageindexresource', [ControllerCms::class, 'indexresource'])->name('page.index.resource');
         Route::get('/pageaddinfografik', [ControllerCms::class, 'addinfografik'])->name('page.add.infografik');
-        Route::get('/pageeditresource/{id}', [ControllerCms::class, 'editresource'])->name('page.edit.resource');
+        Route::get('/pageeditinfografik/{id}', [ControllerCms::class, 'editinfografik'])->name('page.edit.infografik');
     });

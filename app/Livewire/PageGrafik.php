@@ -6,9 +6,9 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Livewire\Component;
 
-class PageJournal extends Component
+class PageGrafik extends Component
 {
-    public array $journals = [];
+    public array $items = [];
 
     public function mount(): void
     {
@@ -29,14 +29,14 @@ class PageJournal extends Component
                 'publikasi',
                 'status',
             ])
-            ->where('type', 'journal')
+            ->where('type', 'grafik')
             ->where('publikasi', 'publish')
             ->where('status', 'on')
             ->orderByDesc('tanggal_publikasi')
             ->orderByDesc('id')
             ->get();
 
-        $this->journals = $rows->map(function ($r) use ($loc) {
+        $this->items = $rows->map(function ($r) use ($loc) {
             $title = $loc === 'id' ? ($r->title_id ?: $r->title_en) : ($r->title_en ?: $r->title_id);
             $desc  = $loc === 'id' ? ($r->description_id ?: $r->description_en) : ($r->description_en ?: $r->description_id);
             $img   = $loc === 'id' ? ($r->image_id ?: $r->image) : ($r->image_en ?: $r->image);
@@ -54,6 +54,6 @@ class PageJournal extends Component
 
     public function render()
     {
-        return view('livewire.page-journal', ['journals' => $this->journals]);
+        return view('livewire.page-grafik', ['items' => $this->items]);
     }
 }

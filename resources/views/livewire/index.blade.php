@@ -176,14 +176,15 @@
 
         </section>
         <!-- INFOGRAFIK -->
-        <section class="px-4 sm:px-12 lg:px-52 py-24">
+        <section class="px-4 sm:px-12 lg:px-52 py-24 max-sm:py-12">
 
             <p class="text-sm tracking-widest text-slate-600 mb-4">INFOGRAFIK</p>
 
-            <div class="flex flex-col sm:flex-row gap-6 justify-center">
+            <div class="flex flex-col sm:flex-row gap-6 justify-center max-sm:gap-4">
 
                 <!-- ITEM 0 -->
-                <div class="max-w-lg w-full sm:w-auto">
+                @if(isset($infographics[0]))
+                <div class="max-w-lg w-full sm:w-auto max-sm:mx-auto">
                     <div
                         class="w-full aspect-[4/5] bg-gray-300 overflow-hidden relative"
                         x-data="{ idx: 0, imgs: {{ json_encode($infographics[0]['images']) }} }">
@@ -192,7 +193,7 @@
                         <img
                             :src="imgs[idx]"
                             class="w-full h-full object-cover cursor-pointer"
-                            @click="openPopup(imgs, idx)">
+                            @click="$dispatch('open-infographic', { infoIdx: 0, idx: idx })">
 
                         <!-- PREV -->
                         <button
@@ -222,21 +223,22 @@
 
                     </div>
                 </div>
+                @endif
 
 
                 <!-- ITEM 1 & 2 -->
-                <div class="flex flex-col gap-5 w-full sm:w-auto">
+                <div class="flex flex-col gap-5 w-full sm:w-auto max-sm:gap-4">
 
                     <!-- ITEM 1 -->
                     @if(isset($infographics[1]))
                     <div
-                        class="w-full sm:w-62 aspect-[4/5] bg-gray-300 overflow-hidden relative"
+                        class="w-full sm:w-62 aspect-[4/5] bg-gray-300 overflow-hidden relative max-sm:max-w-lg max-sm:mx-auto"
                         x-data="{ idx: 0, imgs: {{ json_encode($infographics[1]['images']) }} }">
 
                         <img
                             :src="imgs[idx]"
                             class="w-full h-full object-cover cursor-pointer"
-                            @click="openPopup(imgs, idx)">
+                            @click="$dispatch('open-infographic', { infoIdx: 1, idx: idx })">
 
                         <!-- PREV -->
                         <button
@@ -271,13 +273,13 @@
                     <!-- ITEM 2 -->
                     @if(isset($infographics[2]))
                     <div
-                        class="w-full sm:w-62 aspect-[4/5] bg-gray-300 overflow-hidden relative"
+                        class="w-full sm:w-62 aspect-[4/5] bg-gray-300 overflow-hidden relative max-sm:max-w-lg max-sm:mx-auto"
                         x-data="{ idx: 0, imgs: {{ json_encode($infographics[2]['images']) }} }">
 
                         <img
                             :src="imgs[idx]"
                             class="w-full h-full object-cover cursor-pointer"
-                            @click="openPopup(imgs, idx)">
+                            @click="$dispatch('open-infographic', { infoIdx: 2, idx: idx })">
 
                         <!-- PREV -->
                         <button
@@ -313,20 +315,21 @@
             </div>
 
             <!-- POPUP -->
+            @if(!empty($infographics))
             <div
                 x-data="{
-            popup: true,
+            popup: false,
             infoIdx: 0,
             popupIdx: 0,
-            infographics: infographicsData,
+            infographics: @js($infographics),
             get popupImgs() {
-                return this.infographics[this.infoIdx].images
+                return this.infographics[this.infoIdx]?.images ?? []
             },
             get popupTitle() {
-                return this.infographics[this.infoIdx].title
+                return this.infographics[this.infoIdx]?.title ?? ''
             },
             get popupDesc() {
-                return this.infographics[this.infoIdx].desc
+                return this.infographics[this.infoIdx]?.desc ?? ''
             },
             nextInfo() {
                 if (this.infoIdx < this.infographics.length - 1) {
@@ -342,12 +345,19 @@
             },
             closePopup() {
                 this.popup = false
+                document.documentElement.classList.remove('overflow-hidden')
             }
         }"
+                x-on:open-infographic.window="
+            infoIdx = $event.detail.infoIdx ?? 0;
+            popupIdx = $event.detail.idx ?? 0;
+            popup = true;
+            document.documentElement.classList.add('overflow-hidden');
+        "
                 x-show="popup"
                 x-transition
                 @click.self="closePopup()"
-                class="fixed inset-0 bg-black/80 z-[999] flex items-center justify-center">
+                class="fixed inset-0 bg-black/80 z-[999] flex items-center justify-center sm:p-6 max-sm:p-3">
 
                 <button @click="closePopup()"
                     class="absolute top-3 right-6 bg-black/80 hover:bg-black/90
@@ -363,7 +373,7 @@
                 <button
 
                     @click.stop="prevInfo()"
-                    class="absolute left-6 top-1/2 -translate-y-1/2 bg-black/70 hover:bg-black/90
+                    class="hidden sm:block absolute left-6 top-1/2 -translate-y-1/2 bg-black/70 hover:bg-black/90
                    p-3 rounded-full text-white z-30">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none"
                         viewBox="0 0 24 24" stroke-width="2" stroke="white"
@@ -376,7 +386,7 @@
                 <button
 
                     @click.stop="nextInfo()"
-                    class="absolute right-6 top-1/2 -translate-y-1/2 bg-black/70 hover:bg-black/90
+                    class="hidden sm:block absolute right-6 top-1/2 -translate-y-1/2 bg-black/70 hover:bg-black/90
                    p-3 rounded-full text-white z-30">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none"
                         viewBox="0 0 24 24" stroke-width="2" stroke="white"
@@ -386,12 +396,11 @@
                     </svg>
                 </button>
 
-                <div class="bg-white max-w-5xl w-full h-[90vh] flex overflow-hidden relative">
+                <div class="bg-white max-w-[1400px] w-[95vw] h-[88vh] flex overflow-hidden relative max-sm:w-full max-sm:h-[92vh] max-sm:flex-col">
 
                     <button
-
                         @click.stop="prevInfo()"
-                        class="absolute -left-14 top-1/2 -translate-y-1/2 bg-black/70 hover:bg-black/90
+                        class="hidden lg:block absolute -left-14 top-1/2 -translate-y-1/2 bg-black/70 hover:bg-black/90
                        p-3 rounded-full text-white z-20">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none"
                             viewBox="0 0 24 24" stroke-width="2" stroke="white"
@@ -402,9 +411,8 @@
                     </button>
 
                     <button
-
                         @click.stop="nextInfo()"
-                        class="absolute -right-14 top-1/2 -translate-y-1/2 bg-black/70 hover:bg-black/90
+                        class="hidden lg:block absolute -right-14 top-1/2 -translate-y-1/2 bg-black/70 hover:bg-black/90
                        p-3 rounded-full text-white z-20">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none"
                             viewBox="0 0 24 24" stroke-width="2" stroke="white"
@@ -414,7 +422,7 @@
                         </svg>
                     </button>
 
-                    <div class="w-[480px] h-full bg-white border-r border-slate-200 overflow-hidden relative flex items-center">
+                    <div class="h-full aspect-[4/5] bg-black border-r border-slate-200 overflow-hidden relative shrink-0 max-sm:w-full max-sm:h-[52vh] max-sm:border-b max-sm:border-r-0 max-sm:mx-auto">
 
                         <button
                             x-show="popupIdx > 0"
@@ -429,7 +437,7 @@
                             </svg>
                         </button>
 
-                        <img :src="popupImgs[popupIdx]" class="w-full h-full object-cover">
+                        <img :src="popupImgs[popupIdx]" class="w-full h-full object-cover object-center">
 
                         <button
                             x-show="popupIdx < popupImgs.length - 1"
@@ -446,14 +454,27 @@
 
                     </div>
 
-                    <div class="flex-1 p-6 overflow-y-auto bg-white">
-                        <h2 class="text-xl font-semibold mb-4" x-text="popupTitle"></h2>
-                        <p class="text-sm text-gray-700 leading-relaxed" x-text="popupDesc"></p>
+                    <div class="flex-1 bg-white flex flex-col min-w-0 max-sm:min-h-0">
+                        <div class="px-6 py-4 border-b border-slate-200 flex items-center gap-3">
+                            <img src="{{ asset('img/logos/logo.png') }}"
+                                alt="Auriga Laut"
+                                class="w-10 h-10 rounded-full object-contain border border-slate-200 p-1">
+                            <div class="leading-tight">
+                                <p class="text-sm font-semibold text-slate-900">Auriga Laut</p>
+                                <p class="text-xs text-slate-500">Official</p>
+                            </div>
+                        </div>
+
+                        <div class="px-4 sm:px-6 py-4 sm:py-5 overflow-y-auto">
+                            <h2 class="text-lg font-semibold text-slate-900 mb-3 break-words" x-text="popupTitle"></h2>
+                            <div class="prose prose-sm max-w-none text-slate-700 break-words" x-html="popupDesc"></div>
+                        </div>
                     </div>
 
                 </div>
 
             </div>
+            @endif
         </section>
     </main>
 

@@ -4,7 +4,7 @@
 
         <div class="px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto">
             <div class="py-4 text-xl mt-4">
-                <p>Page literacys</p>
+                <p>Page Literacy</p>
                 @if (session('success'))
                 <div x-data="{ show:true }"
                     x-init="setTimeout(()=>show=false,2000)"
@@ -20,8 +20,8 @@
             <div class="flex justify-between items-center mb-6">
                 <div class="flex gap-2">
                     <button wire:click="$set('type','all')" class="px-3 py-1.5 border {{ $type==='all' ? 'bg-blue-600 text-white' : 'bg-white text-slate-700' }}">All</button>
-                    <button wire:click="$set('type','infografik')" class="px-3 py-1.5 border {{ $type==='infografik' ? 'bg-blue-600 text-white' : 'bg-white text-slate-700' }}">InfoGrafik</button>
-                    <button wire:click="$set('type','journal')" class="px-3 py-1.5 border {{ $type==='journal' ? 'bg-blue-600 text-white' : 'bg-white text-slate-700' }}">journal</button>
+                    <button wire:click="$set('type','grafik')" class="px-3 py-1.5 border {{ $type==='grafik' ? 'bg-blue-600 text-white' : 'bg-white text-slate-700' }}">Grafik</button>
+                    <button wire:click="$set('type','journal')" class="px-3 py-1.5 border {{ $type==='journal' ? 'bg-blue-600 text-white' : 'bg-white text-slate-700' }}">Jurnal</button>
 
                 </div>
 
@@ -39,7 +39,7 @@
                     <label class="block text-xs text-slate-500 mb-1">Publikasi</label>
                     <select wire:model.live="publikasi" class="border   px-3 py-2">
                         <option value="publish">Publish</option>
-                        <option value="draf">Draf</option>
+                        <option value="draft">Draft</option>
                         <option value="all">All</option>
                     </select>
                 </div>
@@ -98,7 +98,7 @@
                             <span class="
         inline-flex px-2 py-0.5 text-xs font-medium
         {{ $it->publikasi === 'publish' ? 'bg-green-600 text-white' : '' }}
-        {{ $it->publikasi === 'draf' ? 'bg-orange-500 text-white' : '' }}
+        {{ $it->publikasi === 'draft' ? 'bg-orange-500 text-white' : '' }}
     ">
                                 {{ $it->publikasi ?? '-' }}
                             </span>

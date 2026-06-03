@@ -155,6 +155,7 @@ class Index extends Component
                 'id'     => $item->id,
                 'slug'   => $item->slug,
                 'title'  => $loc === 'id' ? $item->title_id : $item->title_en,
+                'desc'   => $loc === 'id' ? ($item->description_id ?? '') : ($item->description_en ?? ''),
                 'images' => $images,
             ];
         })->toArray();

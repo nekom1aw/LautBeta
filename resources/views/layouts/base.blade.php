@@ -104,7 +104,7 @@
                                 <div x-show="desktopOpen==='literasi'" x-cloak @click.outside="desktopOpen=null"
                                     class="absolute left-0 mt-2 w-40 bg-white shadow-lg z-50">
                                     <ul class="text-sm">
-                                        <li class="px-4 py-2 cursor-pointer hover:bg-gray-100 hover:text-blue-400"><a href="#">{{ __('Grafik') }}</a></li>
+                                        <li class="px-4 py-2 cursor-pointer hover:bg-gray-100 hover:text-blue-400"><a href="{{ route('grafik') }}">{{ __('Grafik') }}</a></li>
                                         <li class="px-4 py-2 cursor-pointer hover:bg-gray-100 hover:text-blue-400"><a href="{{ route('journal') }}">{{ __('Jurnal') }}</a></li>
 
                                     </ul>
@@ -269,7 +269,7 @@
                             </svg>
                         </button>
                         <ul x-show="open" x-transition class="pl-4 text-sm space-y-1">
-                            <li><a href="#" class="block py-1">{{ __('Grafik') }}</a></li>
+                            <li><a href="{{ route('grafik') }}" class="block py-1">{{ __('Grafik') }}</a></li>
                             <li><a href="{{ route('journal') }}" class="block py-1">{{ __('Jurnal') }}</a></li>
 
                         </ul>
